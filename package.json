@@ -1,0 +1,25 @@
+{
+  "name": "apidoc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/index.js",
+    "dev": "node ./lib/index.js",
+    "build": "rm -rf /lib && babel --presets es2015,stage-1 src --out-dir ./lib",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-1": "^6.24.1",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.4",
+    "moment": "^2.23.0",
+    "mysql": "^2.16.0",
+    "nodejs-mysql-model": "^1.0.1"
+  }
+}
