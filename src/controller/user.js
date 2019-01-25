@@ -73,7 +73,7 @@ export default class UserController{
         }
       }
       res.json(data)
-    }).catch(res => {
+    }).catch(response => {
       res.json(data)
     })
   }
