@@ -1,5 +1,5 @@
-import Api from '../model/api'
-import {util, mapService} from '../utils/index'
+import ApiService from '../service/apiService'
+import {mapService} from '../utils/index'
 
 export default class ApiController {
   constructor(app) {
@@ -15,17 +15,15 @@ export default class ApiController {
       code: 300,
       message: 'error'
     }
-    Api.find('all', { where: `api_id="${id}"` })
-    .then(response => {
-      const { vals } = response
+
+    ApiService.getApiById(id).then(vals => {
       data = {
         code: 200,
         apiInfo: mapService.mapApi(vals[0] || {}),
         message: 'success'
       }
       res.json(data)
-    })
-    .catch(response => {
+    }).catch(data => {
       res.json(data)
     })
   }
@@ -37,7 +35,8 @@ export default class ApiController {
       code: 300,
       message: '新增失败'
     }
-    this.add(create_time, apiname, tagid, projectid, mdcontent, htmlcontent)
+
+    ApiService.addApi(create_time, apiname, tagid, projectid, mdcontent, htmlcontent)
     .then(response => {
       data = {
         code: 200,
@@ -51,32 +50,6 @@ export default class ApiController {
     })
   }
 
-  add (create_time, apiname, tagid, projectid, mdcontent, htmlcontent) {
-    const str = util.encodeMd5(`${create_time}`)
-    return new Promise((resolve, reject) => {
-      Api.set({
-        api_id: str,
-        sort_id: tagid,
-        project_id: projectid,
-        api_name: apiname,
-        api_edit_content: mdcontent,
-        api_show_content: htmlcontent,
-        created_at: `${create_time}`
-      })
-      Api.save()
-      .then(response => {
-        if (response.vals.affectedRows === 1) {
-          resolve(str)
-        } else {
-          reject()
-        }
-      })
-      .catch(response => {
-        reject()
-      })
-    })
-  }
-
   updateApi (req, res) {
     let {apiname, tagid, mdcontent, htmlcontent, id} = req.body
     const update_time = new Date().getTime()
@@ -84,24 +57,11 @@ export default class ApiController {
       code: 300,
       message: '修改失败'
     }
-    Api.set({
-      sort_id: tagid,
-      api_name: apiname,
-      api_edit_content: mdcontent,
-      api_show_content: htmlcontent,
-      updated_at: `${update_time}`
-    })
-    Api.save(`api_id="${id}"`)
-    .then(response => {
-      if (response.vals.affectedRows === 1) {
-         data = {
-          code: 200,
-          message: 'success'
-        }
-      }
+    ApiService.updateApiById(tagid, apiname, mdcontent, htmlcontent, id).then(() => {
+      data.message = 'success'
+      data.code = 200
       res.json(data)
-    })
-    .catch(response => {
+    }).catch(() => {
       res.json(data)
     })
   }
@@ -112,17 +72,11 @@ export default class ApiController {
       code: 301,
       message: '删除失败'
     }
-    Api.remove(`api_id="${id}"`)
-    .then(response => {
-      if (response.vals.affectedRows === 1) {
-        data = {
-          code: 200,
-          message: '删除成功'
-        }
-      }
+    ApiService.removeApiById(id).then(() => {
+      data.code = 200
+      data.message = '删除成功'
       res.json(data)
-    })
-    .catch(response => {
+    }).catch(() => {
       res.json(data)
     })
   }

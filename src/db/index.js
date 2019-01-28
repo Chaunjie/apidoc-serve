@@ -4,7 +4,7 @@ export default function Db () {
   db.createPool({
     host: 'localhost', // localhost
     user: 'root',
-    password: 'root', // qwer123456
+    password: 'qwer123456', // qwer123456
     database: 'apidoc',
     port: 3306
   })
