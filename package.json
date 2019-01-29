@@ -20,6 +20,7 @@
     "express": "^4.16.4",
     "moment": "^2.23.0",
     "mysql": "^2.16.0",
-    "nodejs-mysql-model": "^1.0.1"
+    "nodejs-mysql-model": "^1.0.1",
+    "svg-captcha": "^1.3.12"
   }
 }
