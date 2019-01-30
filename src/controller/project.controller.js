@@ -1,4 +1,4 @@
-import ProjectService from '../service/projectService'
+import ProjectService from '../service/project.service'
 import {mapService} from '../utils/index'
 
 export default class ProjectController{

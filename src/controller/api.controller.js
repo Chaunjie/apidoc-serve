@@ -1,4 +1,4 @@
-import ApiService from '../service/apiService'
+import ApiService from '../service/api.service'
 import {mapService} from '../utils/index'
 
 export default class ApiController {

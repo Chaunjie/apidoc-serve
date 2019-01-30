@@ -1,10 +1,11 @@
-import UserService from '../service/userService'
+import UserService from '../service/user.service'
 import {mapService} from '../utils/index'
 import regeneratorRuntime from '../lib/runtime'
 
 export default class UserController{
   constructor(app) {
     app.post('/user/add', this.addUser.bind(this))
+    app.post('/user/register', this.registerUser.bind(this))
     app.post('/user/login', this.checkUser)
     app.post('/user/update', this.updateUser)
     app.get('/user/list', this.getList)
@@ -83,6 +84,19 @@ export default class UserController{
     }).catch(response => {
       res.json(data)
     })
+  }
+
+  async registerUser (req, res) {
+    const {username, password, companyname, code} = req.body
+    let data = {
+      code: 300,
+      message: '新增失败'
+    }
+    try {
+
+    } catch (err) {
+      res.json(data)
+    }
   }
 
   async addUser (req, res) {

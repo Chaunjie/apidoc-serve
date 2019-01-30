@@ -1,4 +1,4 @@
-import TagService from '../service/tagService'
+import TagService from '../service/tag.service'
 import {mapService} from '../utils/index'
 
 export default class TagController{

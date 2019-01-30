@@ -1,4 +1,4 @@
-import RelationService from '../service/relationService'
+import RelationService from '../service/relation.service'
 
 export default class RelationController{
   constructor(app) {
