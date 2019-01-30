@@ -105,7 +105,7 @@ export default {
       .then(res => {
         const {vals} = res
         if (vals.affectedRows === 1) {
-          resolve()
+          resolve(userId)
         } else {
           reject()
         }

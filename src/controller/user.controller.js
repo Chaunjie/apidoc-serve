@@ -1,4 +1,5 @@
 import UserService from '../service/user.service'
+import CompanyService from '../service/company.service'
 import {mapService} from '../utils/index'
 import regeneratorRuntime from '../lib/runtime'
 
@@ -93,7 +94,33 @@ export default class UserController{
       message: '新增失败'
     }
     try {
-
+      if (req.session.captcha !== code) {
+        data.message = '验证码不正确'
+        res.json(data)
+        return
+      }
+      const companyList = await CompanyService.getCompanyByName(companyname)
+      if (companyList.length > 0) {
+        data.message = '公司名已存在'
+        res.json(data)
+        return
+      }
+      const userList = await UserService.getUserByName(username)
+      if (userList.length > 0) {
+        data.message = '已存在该用户'
+        res.json(data)
+        return
+      }
+      const companyId = await CompanyService.saveCompany(companyname)
+      const lastId = await UserService.getLastId()
+      const id = +lastId[0]['max(id)'] + 1
+      const userId = await UserService.saveUser(id, username, password)
+      await CompanyService.saveUserCompany(userId, companyId, 1)
+      data = {
+        code: 200,
+        message: 'success'
+      }
+      res.json(data) 
     } catch (err) {
       res.json(data)
     }

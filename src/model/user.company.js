@@ -1,12 +1,12 @@
 import { model } from 'nodejs-mysql-model'
 
 export default new model({
-  tableName: 'apidoc_company',
+  tableName: 'apidoc_user_company',
   attributes: {
-    company_id: {
+    user_id: {
       type: String
     },
-    company_name: {
+    company_id: {
       type: String
     },
     created_at: {
@@ -17,9 +17,9 @@ export default new model({
       type: String,
       default: '0'
     },
-    state: {
+    user_role: {
       type: Number,
-      default: 1
+      default: 0
     }
   }
 })
