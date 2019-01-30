@@ -4,7 +4,6 @@ import { captchaConf } from '../conf'
 export default class checkController{
   constructor(app) {
     app.get('/check/get', this.getCheckImage.bind(this))
-    app.post('/check/check', this.doCheck.bind(this))
   }
 
   getCheckImage (req, res) {
@@ -22,11 +21,5 @@ export default class checkController{
       img: captcha.data
     }
     res.json(codeData)
-  }
-
-  doCheck (req, res) {
-    res.json({
-      code: 200
-    })
   }
 }

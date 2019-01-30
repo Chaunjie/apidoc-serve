@@ -49,5 +49,12 @@ export default {
       editContent: r.api_edit_content,
       showContent: r.api_show_content
     }
+  },
+  mapUserCompany (r) {
+    return {
+      companyId: r.company_id,
+      companyName: r.company_name,
+      role: r.user_role
+    }
   }
 }

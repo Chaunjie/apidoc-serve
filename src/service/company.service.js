@@ -13,6 +13,22 @@ export default {
       })
     })
   },
+  getCompanyByUserid (userid) {
+    return new Promise((resolve, reject) => {
+      Company.query(`select * from apidoc_company as pc left join apidoc_user_company as upc on pc.company_id=upc.company_id where upc.user_id="${userid}"`)
+      .then(res => {
+        const { vals } = res
+        if (vals.length) {
+          resolve(vals)
+        } else {
+          resolve([])
+        }
+      })
+      .catch(res => {
+        reject()
+      })
+    })
+  },
   saveCompany (name) {
     return new Promise((resolve, reject) => {
       const created_at = new Date().getTime()

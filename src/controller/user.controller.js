@@ -58,12 +58,19 @@ export default class UserController{
     }
 
     UserService.checkUserByNamePwd(username, password).then(vals => {
-      data = {
-        code: 200,
-        data: vals.map(mapService.mapUser)[0],
-        message: '登录成功'
-      }
-      res.json(data)
+      const userInfo = vals.map(mapService.mapUser)[0]
+      CompanyService.getCompanyByUserid(userInfo.userId).then(response => {
+        const companyInfo = response.map(mapService.mapUserCompany)[0]
+        const newData = {...userInfo, ...companyInfo}
+        data = {
+          code: 200,
+          data: newData,
+          message: '登录成功'
+        }
+        res.json(data)
+      }).catch(() => {
+        res.json(data)
+      })
     }).catch(response => {
       res.json(data)
     })
@@ -112,9 +119,7 @@ export default class UserController{
         return
       }
       const companyId = await CompanyService.saveCompany(companyname)
-      const lastId = await UserService.getLastId()
-      const id = +lastId[0]['max(id)'] + 1
-      const userId = await UserService.saveUser(id, username, password)
+      const userId = await UserService.saveUser(username, password)
       await CompanyService.saveUserCompany(userId, companyId, 1)
       data = {
         code: 200,
@@ -139,9 +144,8 @@ export default class UserController{
         res.json(data)
         return
       }
-      const lastId = await UserService.getLastId()
-      const id = +lastId[0]['max(id)'] + 1
-      UserService.saveUser(id, username, password).then(() => {
+
+      UserService.saveUser(username, password).then(() => {
         const data = {
           code: 200,
           message: 'success'

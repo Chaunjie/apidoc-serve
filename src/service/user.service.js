@@ -90,11 +90,11 @@ export default {
       })
     })
   },
-  saveUser (id, username, password) {
+  saveUser (username, password) {
     return new Promise((resolve, reject) => {
       const str = util.encodeMd5(password)
-      const userId = util.encodeMd5(id + '')
       const create_time = new Date().getTime()
+      const userId = util.encodeMd5(`${create_time}`)
       User.set({
         user_id: `${userId}`,
         user_username: `${username}`,
