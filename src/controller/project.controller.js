@@ -51,8 +51,8 @@ export default class ProjectController{
   }
 
   addProject (req, res) {
-    const {projectname, userid} = req.body
-    ProjectService.addProject(projectname, userid).then(() => {
+    const {projectname, userid, companyid} = req.body
+    ProjectService.addProject(projectname, userid, companyid).then(() => {
       const data = {
         code: 200,
         message: 'success'

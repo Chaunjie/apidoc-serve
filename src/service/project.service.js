@@ -1,5 +1,6 @@
 import Project from '../model/project'
 import Relation from '../model/relation'
+import ProjectCompany from '../model/project.company'
 import {util} from '../utils/index'
 
 export default {
@@ -35,7 +36,7 @@ export default {
       })
     })
   },
-  addProject (projectname, userid) {
+  addProject (projectname, userid, cid) {
     return new Promise((resolve, reject) => {
       const create_time = new Date().getTime()
       const str = util.encodeMd5(`${create_time}`)
@@ -46,7 +47,7 @@ export default {
       })
       Project.save().then(res => {
         if (res.vals.affectedRows === 1) {
-          this.addUserProject(str, userid).then(() => {
+          Promise.all([this.addUserProject(str, userid), this.addProjectCompany(str, cid)]).then(() => {
             resolve()
           }).catch(() => {
             reject()
@@ -66,6 +67,27 @@ export default {
         user_id: `${id}`
       })
       Relation.save()
+      .then(res => {
+        if (res.vals.affectedRows === 1) {
+          resolve()
+        } else {
+          reject()
+        }
+      })
+      .catch(res => {
+        reject()
+      })
+    })
+  },
+  addProjectCompany (pid, cid) {
+    return new Promise((resolve, reject) => {
+      const create_time = new Date().getTime()
+      ProjectCompany.set({
+        project_id: `${pid}`,
+        company_id: `${cid}`,
+        created_at: `${create_time}`
+      })
+      ProjectCompany.save()
       .then(res => {
         if (res.vals.affectedRows === 1) {
           resolve()
