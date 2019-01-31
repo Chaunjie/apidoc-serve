@@ -3,6 +3,8 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import session from 'express-session'
+import compression from 'compression'
+import history from 'connect-history-api-fallback'
 import Router from './router/index'
 import db from './db'
 
@@ -12,6 +14,8 @@ const router = new Router()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cookieParser())
+app.use(history())
+app.use(compression())
 app.use(session({
   secret:  'secret',
   resave: false,
@@ -20,6 +24,7 @@ app.use(session({
     maxAge: 1000 * 60 * 3
   }
 }))
+app.use(express.static(path.resolve('../apidoc-client/dist')));
 app.all("*", (req, res, next) => {
   res.header("Access-Control-Allow-Origin", req.headers.origin)
   res.header("Access-Control-Allow-Credentials", true)

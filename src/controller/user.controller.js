@@ -14,13 +14,13 @@ export default class UserController{
   }
 
   getList (req, res) {
-    const {userid} = req.query
+    const {userid, companyid} = req.query
     let data = {
       code: 300,
       message: '用户信息获取失败'
     }
 
-    UserService.getList().then(vals => {
+    UserService.getList(companyid).then(vals => {
       data = {
         code: 200,
         list: vals.map(mapService.mapUser),
@@ -132,7 +132,7 @@ export default class UserController{
   }
 
   async addUser (req, res) {
-    const {username, password} = req.body
+    const {username, password, companyid} = req.body
     let data = {
       code: 300,
       message: '新增失败'

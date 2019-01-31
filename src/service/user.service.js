@@ -2,6 +2,19 @@ import User from '../model/user'
 import {util} from '../utils/index'
 
 export default {
+  getCompanyUserById (companyid) {
+    return new Promise((resolve, reject) => {
+      User.query(`select * from apidoc_user as pu left join apidoc_user_company as upc on pu.user_id=upc.user_id where upc.company_id="${companyid}"`).then(res => {
+        let {vals} = res
+        vals = vals.filter(r => {
+          return r.id !== 1
+        })
+        resolve(vals)
+      }).catch(res => {
+        reject()
+      })
+    })
+  },
   getList () {
     return new Promise((resolve, reject) => {
       User.find('all').then(res => {
