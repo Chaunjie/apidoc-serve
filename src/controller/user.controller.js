@@ -1,5 +1,6 @@
 import UserService from '../service/user.service'
 import CompanyService from '../service/company.service'
+import UserCompanyService from '../service/user.company.service'
 import {mapService} from '../utils/index'
 import regeneratorRuntime from '../lib/runtime'
 
@@ -7,47 +8,92 @@ export default class UserController{
   constructor(app) {
     app.post('/user/add', this.addUser.bind(this))
     app.post('/user/register', this.registerUser.bind(this))
+    app.post('/user/updatepwd', this.updatePwd.bind(this))
     app.post('/user/login', this.checkUser)
     app.post('/user/update', this.updateUser)
     app.get('/user/list', this.getList)
     app.delete('/user/delete', this.deleteUser)
   }
 
-  getList (req, res) {
+  async updatePwd (req, res) {
+    const {oldpassword, newpassword, userid} = req.body
+    let data = {
+      code: 300,
+      message: 'error'
+    }
+    try {
+      const userList = await UserService.getUserByIdAndPwd(oldpassword, userid)
+      if (userList.length === 0) {
+        data.message = '不存在该用户, 或者原始密码不对'
+        res.json(data)
+        return
+      }
+      await UserService.updateById(newpassword, userid)
+      data = {
+        code: 200,
+        message: 'success'
+      }
+      res.json(data)
+    } catch (err) {
+      res.json(data)
+    }
+  }
+
+  async getList (req, res) {
     const {userid, companyid} = req.query
     let data = {
       code: 300,
       message: '用户信息获取失败'
     }
-
-    UserService.getList(companyid).then(vals => {
-      data = {
-        code: 200,
-        list: vals.map(mapService.mapUser),
-        message: 'success'
+    try {
+      const userCompanyInfo = await UserCompanyService.getInfoById(userid)
+      if (userCompanyInfo.user_role !== 1) {
+        data.message = '当前用户无法获取用户列表'
+        res.json(data)
+        return
       }
+      UserService.getCompanyUserById(companyid).then(vals => {
+        const newVals = vals.filter(r => {
+          return r.user_id !== userid && r.user_role === 0
+        })
+        data = {
+          code: 200,
+          list: newVals.map(mapService.mapUser),
+          message: 'success'
+        }
+        res.json(data)
+      }).catch(res => {
+        res.json(data)
+      })
+    } catch (err) {
       res.json(data)
-    }).catch(res => {
-      res.json(data)
-    })
+    }
   }
 
-  deleteUser (req, res) {
-    const {userid} = req.query
+  async deleteUser (req, res) {
+    const {userid, adminid} = req.query
     let data = {
       code: 301,
       message: '删除失败'
     }
 
-    UserService.deleteUser(userid).then(response => {
-      data = {
+    try {
+      const userCompanyInfo = await UserCompanyService.getInfoById(adminid)
+      if (userCompanyInfo.user_role !== 1) {
+        data.message = '当前用户无法删除用户'
+        res.json(data)
+        return
+      }
+
+      await UserService.deleteUser(userid)
+       data = {
         code: 200,
         message: '删除成功'
       }
       res.json(data)
-    }).catch(response => {
+    } catch (err) {
       res.json(data)
-    })
+    }
   }
 
   checkUser (req, res) {
@@ -132,12 +178,18 @@ export default class UserController{
   }
 
   async addUser (req, res) {
-    const {username, password, companyid} = req.body
+    const {username, password, companyid, userid} = req.body
     let data = {
       code: 300,
       message: '新增失败'
     }
     try {
+      const userCompanyInfo = await UserCompanyService.getInfoById(userid)
+      if (userCompanyInfo.user_role !== 1) {
+        data.message = '当前用户无法新增用户'
+        res.json(data)
+        return
+      }
       const userList = await UserService.getUserByName(username)
       if (userList.length > 0) {
         data.message = '已存在该用户'
@@ -145,15 +197,13 @@ export default class UserController{
         return
       }
 
-      UserService.saveUser(username, password).then(() => {
-        const data = {
-          code: 200,
-          message: 'success'
-        }
-        res.json(data)
-      }).catch(data => {
-        res.json(data)
-      })
+      const userId = await UserService.saveUser(username, password)
+      await CompanyService.saveUserCompany(userId, companyid, 0)
+      data = {
+        code: 200,
+        message: 'success'
+      }
+      res.json(data)
     } catch (err) {
       res.json(data)
     }

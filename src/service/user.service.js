@@ -6,10 +6,7 @@ export default {
     return new Promise((resolve, reject) => {
       User.query(`select * from apidoc_user as pu left join apidoc_user_company as upc on pu.user_id=upc.user_id where upc.company_id="${companyid}"`).then(res => {
         let {vals} = res
-        vals = vals.filter(r => {
-          return r.id !== 1
-        })
-        resolve(vals)
+        resolve(vals || [])
       }).catch(res => {
         reject()
       })
@@ -99,6 +96,19 @@ export default {
         }
       })
       .catch(response => {
+        reject()
+      })
+    })
+  },
+  getUserByIdAndPwd (password, userid) {
+    return new Promise((resolve, reject) => {
+      const str = util.encodeMd5(`${password}`)
+      User.find('all', {where: `user_id="${userid}" and user_password="${str}"`})
+      .then(res => {
+        const {vals} = res
+        resolve(vals)
+      })
+      .catch(res => {
         reject()
       })
     })

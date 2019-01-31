@@ -3,11 +3,11 @@ import UserCompany from '../model/user.company'
 export default {
   saveUserCompany (userid, companyid) {
     return new Promise((resolve, reject) => {
-      const update_time = new Date().getTime()
+      const created_at = new Date().getTime()
       UserCompany.set({
         user_id: `${userid}`,
         company_id: `${companyid}`,
-        updated_at: `${update_time}`
+        created_at: `${created_at}`
       })
       UserCompany.save()
       .then(response => {
@@ -22,23 +22,18 @@ export default {
       })
     })
   },
-  updateById (userid, companyid) {
+  getInfoById (userid) {
     return new Promise((resolve, reject) => {
-      const update_time = new Date().getTime()
-      UserCompany.set({
-        user_id: `${userid}`,
-        company_id: `${companyid}`,
-        updated_at: `${update_time}`
-      })
-      UserCompany.save(`user_id="${userid}"`)
-      .then(response => {
-        if (response.vals.affectedRows > 0) {
-          resolve()
+      UserCompany.find('all', { where: `user_id="${userid}"` })
+      .then(res => {
+        const {vals} = res
+        if (vals.length) {
+          resolve(vals[0])
         } else {
-          reject()
+          resolve({})
         }
       })
-      .catch(response => {
+      .catch(res => {
         reject()
       })
     })
