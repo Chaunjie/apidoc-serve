@@ -20,22 +20,6 @@ export default {
       })
     })
   },
-  queryUserList (userid) {
-    return new Promise((resolve, reject) => {
-      Project.query(`select * from apidoc_project as pr left join apidoc_user_project as upr on pr.project_id=upr.project_id where upr.user_id="${userid}"`)
-      .then(res => {
-        const { vals } = res
-        if (vals.length) {
-          resolve(vals)
-        } else {
-          resolve([])
-        }
-      })
-      .catch(res => {
-        reject()
-      })
-    })
-  },
   addProject (projectname, userid, cid) {
     return new Promise((resolve, reject) => {
       const create_time = new Date().getTime()
@@ -129,6 +113,38 @@ export default {
           reject()
         }
       }).catch(() => {
+        reject()
+      })
+    })
+  },
+  getCompanyProject (cid) {
+    return new Promise((resolve, reject) => {
+      Project.query(`select * from apidoc_project as pr left join apidoc_project_company as upc on pr.project_id=upc.project_id where upc.company_id="${cid}"`)
+      .then(res => {
+        const { vals } = res
+        if (vals.length) {
+          resolve(vals)
+        } else {
+          resolve([])
+        }
+      })
+      .catch(res => {
+        reject()
+      })
+    })
+  },
+  queryUserList (userid) {
+    return new Promise((resolve, reject) => {
+      Project.query(`select * from apidoc_project as pr left join apidoc_user_project as upr on pr.project_id=upr.project_id where upr.user_id="${userid}"`)
+      .then(res => {
+        const { vals } = res
+        if (vals.length) {
+          resolve(vals)
+        } else {
+          resolve([])
+        }
+      })
+      .catch(res => {
         reject()
       })
     })

@@ -10,8 +10,8 @@ export default class ProjectController{
   }
 
   getUserProjectList (req, res) {
-    const {userid} = req.query
-    Promise.all([ProjectService.queryList(), ProjectService.queryUserList(userid)])
+    const {userid, companyid} = req.query
+    Promise.all([ProjectService.getCompanyProject(companyid), ProjectService.queryUserList(userid)])
     .then(response => {
       const data = {
         code: 200,
