@@ -11,7 +11,7 @@
  Target Server Version : 80013
  File Encoding         : 65001
 
- Date: 25/01/2019 17:05:19
+ Date: 31/01/2019 13:32:37
 */
 
 SET NAMES utf8mb4;
@@ -48,6 +48,44 @@ CREATE TABLE `apidoc_project` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='项目表';
 
 -- ----------------------------
+-- Table structure for apidoc_company
+-- ----------------------------
+DROP TABLE IF EXISTS `apidoc_company`;
+CREATE TABLE `apidoc_company` (
+  `company_id` varchar(255) COLLATE utf8_bin NOT NULL,
+  `company_name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `created_at` varchar(255) COLLATE utf8_bin DEFAULT '0',
+  `updated_at` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `state` int(1) DEFAULT '1',
+  PRIMARY KEY (`company_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- ----------------------------
+-- Table structure for apidoc_project_company
+-- ----------------------------
+DROP TABLE IF EXISTS `apidoc_project_company`;
+CREATE TABLE `apidoc_project_company` (
+  `project_id` varchar(255) COLLATE utf8_bin NOT NULL,
+  `company_id` varchar(255) COLLATE utf8_bin NOT NULL,
+  `created_at` varchar(255) COLLATE utf8_bin DEFAULT '0',
+  `updated_at` varchar(255) COLLATE utf8_bin DEFAULT '0',
+  PRIMARY KEY (`project_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- ----------------------------
+-- Table structure for apidoc_user_company
+-- ----------------------------
+DROP TABLE IF EXISTS `apidoc_user_company`;
+CREATE TABLE `apidoc_user_company` (
+  `user_id` varchar(255) COLLATE utf8_bin NOT NULL,
+  `company_id` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `user_role` int(1) DEFAULT '0' COMMENT '用户相当于公司角色1,管理员0，开发人员',
+  `created_at` varchar(255) COLLATE utf8_bin DEFAULT '0',
+  `updated_at` varchar(255) COLLATE utf8_bin DEFAULT '0',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- ----------------------------
 -- Table structure for apidoc_sort
 -- ----------------------------
 DROP TABLE IF EXISTS `apidoc_sort`;
@@ -77,14 +115,15 @@ CREATE TABLE `apidoc_user` (
   `user_state` int(1) DEFAULT '1' COMMENT '状态（1正常，2冻结，3删除）',
   `user_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '用户id加密',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=148 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=159 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户表';
+
 
 -- ----------------------------
 -- Table structure for apidoc_user_project
 -- ----------------------------
 DROP TABLE IF EXISTS `apidoc_user_project`;
 CREATE TABLE `apidoc_user_project` (
-  `user_id` varchar(64) DEFAULT '0' COMMENT '用户id',
+  `user_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户id',
   `project_id` varchar(64) DEFAULT '0' COMMENT '项目id'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户项目表';
 
