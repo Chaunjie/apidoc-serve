@@ -17,14 +17,15 @@ app.use(cookieParser())
 app.use(history())
 app.use(compression())
 app.use(session({
-  secret:  'secret',
+  secret: 'secret',
   resave: false,
   saveUninitialized: false,
   cookie: {
     maxAge: 1000 * 60 * 3
   }
 }))
-app.use(express.static(path.resolve('../apidoc-client/dist')));
+// app.use(express.static(path.resolve('../apidoc-client/dist')));
+app.use(express.static(path.resolve('../../web')));
 app.all("*", (req, res, next) => {
   res.header("Access-Control-Allow-Origin", req.headers.origin)
   res.header("Access-Control-Allow-Credentials", true)

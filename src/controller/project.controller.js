@@ -1,4 +1,5 @@
 import ProjectService from '../service/project.service'
+import { getProjectList, needLogin } from '../service/verify.service'
 import {mapService} from '../utils/index'
 
 export default class ProjectController{
@@ -30,6 +31,7 @@ export default class ProjectController{
     })
   }
 
+  @needLogin
   getList (req, res) {
     const {userid} = req.query
     ProjectService.queryUserList(userid)
