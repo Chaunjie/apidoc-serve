@@ -44,6 +44,24 @@ export default {
       })
     })
   },
+  updateProject (name, pid) {
+    return new Promise((resolve, reject) => {
+      const updated_time = new Date().getTime()
+      Project.set({
+        project_name: `${name}`,
+        updated_at: `${updated_time}`
+      })
+      Project.save(`project_id="${pid}"`).then(res => {
+        if (res.vals.affectedRows === 1) {
+          resolve()
+        } else {
+          reject()
+        }
+      }).catch(res => {
+        reject()
+      })
+    })
+  },
   addUserProject (pid, id) {
     return new Promise((resolve, reject) => {
       Relation.set({

@@ -5,6 +5,7 @@ import {mapService} from '../utils/index'
 export default class ProjectController{
   constructor(app) {
     app.post('/project/add', this.addProject.bind(this))
+    app.post('/project/update', this.updateProject.bind(this))
     app.get('/project/list', this.getList.bind(this))
     app.get('/project/querylist', this.getUserProjectList.bind(this))
     app.delete('/project/delete', this.deleteProject.bind(this))
@@ -70,6 +71,25 @@ export default class ProjectController{
         code: 300,
         message: '新增失败'
       }
+      res.json(data)
+    })
+  }
+
+  @needProject
+  @needProjectName
+  updateProject (req, res) {
+    const {projectname, projectid} = req.body
+    let data = {
+      code: 300,
+      message: 'error'
+    }
+    ProjectService.updateProject(projectname, projectid).then(() => {
+      data = {
+        code: 200,
+        message: '修改成功'
+      }
+      res.json(data)
+    }).catch(() => {
       res.json(data)
     })
   }
