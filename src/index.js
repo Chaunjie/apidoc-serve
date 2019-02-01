@@ -24,7 +24,6 @@ app.use(session({
     maxAge: 1000 * 60 * 3
   }
 }))
-// app.use(express.static(path.resolve('../apidoc-client/dist')));
 app.use(express.static(path.resolve('../../web')));
 app.all("*", (req, res, next) => {
   res.header("Access-Control-Allow-Origin", req.headers.origin)

@@ -58,12 +58,12 @@ export default class UserController{
         return
       }
       UserService.getCompanyUserById(companyid).then(vals => {
-        const newVals = vals.filter(r => {
-          return r.user_id !== userid && r.user_role === 0
-        })
+        // const newVals = vals.filter(r => {
+        //   return r.user_id !== userid && r.user_role === 0
+        // })
         data = {
           code: 200,
-          list: newVals.map(mapService.mapUser),
+          list: vals.map(mapService.mapUser),
           message: 'success'
         }
         res.json(data)
@@ -82,6 +82,12 @@ export default class UserController{
     let data = {
       code: 301,
       message: '删除失败'
+    }
+
+    if (userid === adminid) {
+      data.message = '用户无法删除自己'
+      res.json(data)
+      return
     }
 
     try {
