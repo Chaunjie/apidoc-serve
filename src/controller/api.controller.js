@@ -1,4 +1,5 @@
 import ApiService from '../service/api.service'
+import { needProject, needApiId, needTagId, needApiInfo } from '../service/verify.service'
 import {mapService} from '../utils/index'
 
 export default class ApiController {
@@ -9,6 +10,7 @@ export default class ApiController {
     app.delete('/api/delete', this.deleteApiById)
   }
 
+  @needApiId
   getApi (req, res) {
     const {id} = req.query
     let data = {
@@ -28,6 +30,9 @@ export default class ApiController {
     })
   }
 
+  @needTagId
+  @needProject
+  @needApiInfo
   addApi (req, res) {
     const {apiname, tagid, projectid, mdcontent, htmlcontent} = req.body
     const create_time = new Date().getTime()
@@ -50,6 +55,9 @@ export default class ApiController {
     })
   }
 
+  @needApiId
+  @needTagId
+  @needApiInfo
   updateApi (req, res) {
     let {apiname, tagid, mdcontent, htmlcontent, id} = req.body
     const update_time = new Date().getTime()
@@ -66,6 +74,7 @@ export default class ApiController {
     })
   }
 
+  @needApiId
   deleteApiById (req, res) {
     const {id} = req.query
     let data = {

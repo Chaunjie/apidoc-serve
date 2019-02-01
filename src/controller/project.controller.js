@@ -1,5 +1,5 @@
 import ProjectService from '../service/project.service'
-import { getProjectList, needLogin } from '../service/verify.service'
+import { getProjectList, needLogin, needCompany, needProject, needProjectName } from '../service/verify.service'
 import {mapService} from '../utils/index'
 
 export default class ProjectController{
@@ -10,6 +10,8 @@ export default class ProjectController{
     app.delete('/project/delete', this.deleteProject.bind(this))
   }
 
+  @needLogin
+  @needCompany
   getUserProjectList (req, res) {
     const {userid, companyid} = req.query
     Promise.all([ProjectService.getCompanyProject(companyid), ProjectService.queryUserList(userid)])
@@ -52,6 +54,9 @@ export default class ProjectController{
     })
   }
 
+  @needLogin
+  @needCompany
+  @needProjectName
   addProject (req, res) {
     const {projectname, userid, companyid} = req.body
     ProjectService.addProject(projectname, userid, companyid).then(() => {
@@ -69,6 +74,7 @@ export default class ProjectController{
     })
   }
 
+  @needProject
   deleteProject (req, res) {
     const {projectid} = req.query
     let data = {

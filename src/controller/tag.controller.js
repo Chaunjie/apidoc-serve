@@ -1,4 +1,5 @@
 import TagService from '../service/tag.service'
+import { needProject, needTagId, needTagName, needTagById } from '../service/verify.service'
 import {mapService} from '../utils/index'
 
 export default class TagController{
@@ -10,6 +11,7 @@ export default class TagController{
     app.delete('/tag/delete', this.deleteTagById.bind(this))
   }
 
+  @needProject
   getList (req, res) {
     const {projectid} = req.query
 
@@ -31,6 +33,7 @@ export default class TagController{
     })
   }
 
+  @needProject
   getMenu (req, res) {
     const {projectid} = req.query
     let data = {
@@ -53,6 +56,8 @@ export default class TagController{
     })
   }
 
+  @needProject
+  @needTagName
   addTag (req, res) {
     const {tagname, projectid} = req.body
     let data = {
@@ -71,6 +76,8 @@ export default class TagController{
     })
   }
 
+  @needTagId
+  @needTagName
   updateTag (req, res) {
     const {tagname, tagid} = req.body
     let data = {
@@ -87,6 +94,7 @@ export default class TagController{
     })
   }
 
+  @needTagById
   deleteTagById (req, res) {
     const {id} = req.query
     let data = {
