@@ -1,6 +1,7 @@
 import UserService from '../service/user.service'
 import CompanyService from '../service/company.service'
 import UserCompanyService from '../service/user.company.service'
+import { needLogin, needCompany, needAdminId, needAllPwd, needCompanyNameAndCode, needUsernameAndPwd } from '../service/verify.service'
 import {mapService} from '../utils/index'
 import regeneratorRuntime from '../lib/runtime'
 
@@ -15,6 +16,8 @@ export default class UserController{
     app.delete('/user/delete', this.deleteUser)
   }
 
+  @needLogin
+  @needAllPwd
   async updatePwd (req, res) {
     const {oldpassword, newpassword, userid} = req.body
     let data = {
@@ -39,6 +42,8 @@ export default class UserController{
     }
   }
 
+  @needLogin
+  @needCompany
   async getList (req, res) {
     const {userid, companyid} = req.query
     let data = {
@@ -70,6 +75,8 @@ export default class UserController{
     }
   }
 
+  @needLogin
+  @needAdminId
   async deleteUser (req, res) {
     const {userid, adminid} = req.query
     let data = {
@@ -96,6 +103,7 @@ export default class UserController{
     }
   }
 
+  @needUsernameAndPwd
   checkUser (req, res) {
     const {username, password} = req.body
     let data = {
@@ -122,6 +130,7 @@ export default class UserController{
     })
   }
 
+  @needLogin
   updateUser (req, res) {
     const {password, userid} = req.body
     let data = {
@@ -140,6 +149,8 @@ export default class UserController{
     })
   }
 
+  @needUsernameAndPwd
+  @needCompanyNameAndCode
   async registerUser (req, res) {
     const {username, password, companyname, code} = req.body
     let data = {
@@ -177,6 +188,9 @@ export default class UserController{
     }
   }
 
+  @needLogin
+  @needCompany
+  @needUsernameAndPwd
   async addUser (req, res) {
     const {username, password, companyid, userid} = req.body
     let data = {
